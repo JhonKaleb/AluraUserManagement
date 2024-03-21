@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: alura_user_management
+      MYSQL_USER: sprig
+      MYSQL_PASSWORD: sprigpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+  app:
+    image: alura-user-management
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/alura_user_management
+      SPRING_DATASOURCE_USERNAME: sprig
+      SPRING_DATASOURCE_PASSWORD: sprigpassword
+    depends_on:
+      - db
+volumes:
+  db-data:
