@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		"com.alura.UserManagement.repository",
 		"com.alura.UserManagement.controller",
 		"com.alura.UserManagement.exception",
+		"com.alura.UserManagement.filter",
 })
 @EntityScan(basePackages = {"com.alura.UserManagement.domain"})
 @EnableJpaRepositories({"com.alura.UserManagement.repository"})

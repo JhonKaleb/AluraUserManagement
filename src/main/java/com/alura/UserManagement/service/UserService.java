@@ -1,12 +1,18 @@
 package com.alura.UserManagement.service;
 
+import com.alura.UserManagement.domain.user.AuthenticationDTO;
+import com.alura.UserManagement.domain.user.LoginResponseDTO;
 import com.alura.UserManagement.domain.user.RegisterDTO;
+import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.exception.ApiRequestException;
 import com.alura.UserManagement.exception.ErrorMessages;
 import com.alura.UserManagement.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +22,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public ResponseEntity<String> register(RegisterDTO payload) {
         log.info("Registering user: {}", payload.getUsername());
@@ -60,5 +72,13 @@ public class UserService {
 
     private boolean isEmailValid(String email) {
         return email.matches("^(.+)@(.+)$");
+    }
+
+    public ResponseEntity<LoginResponseDTO> login(AuthenticationDTO payload) {
+        log.info("Logging in user: {}", payload.getUsername());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(payload.getUsername(), payload.getPassword());
+        var auth = authenticationManager.authenticate(usernamePassword);
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 }

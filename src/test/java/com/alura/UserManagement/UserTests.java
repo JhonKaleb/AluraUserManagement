@@ -1,11 +1,11 @@
 package com.alura.UserManagement;
 
 
-import com.alura.UserManagement.domain.user.RegisterDTO;
-import com.alura.UserManagement.domain.user.User;
+import com.alura.UserManagement.domain.user.*;
 import com.alura.UserManagement.exception.ApiRequestException;
 import com.alura.UserManagement.exception.ErrorMessages;
 import com.alura.UserManagement.repository.UserRepository;
+import com.alura.UserManagement.service.TokenService;
 import com.alura.UserManagement.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,9 +17,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +35,14 @@ public class UserTests {
 
     @InjectMocks
     private UserService userService;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
+
+    @Mock
+    private TokenService tokenService;
+
+    /** ENDPOINT : POST /user/register */
 
     // Registering a new user with valid username, password, and email
     @Test
@@ -126,5 +139,26 @@ public class UserTests {
         } catch (ApiRequestException e) {
             assertEquals(ErrorMessages.User.INVALID_PASSWORD, e.getMessage());
         }
+    }
+
+
+    /** ENDPOINT : POST /user/login */
+
+    @Test
+    public void testLoginWithValidCredentials() {
+        AuthenticationDTO authenticationDTO = new AuthenticationDTO("testuser", "Test1234");
+        String encryptedPassword = new BCryptPasswordEncoder().encode(authenticationDTO.getPassword());
+
+        User user = new User();
+        user.setUsername("testuser");
+        user.setPassword(encryptedPassword);
+        user.setRole(UserRole.ADMIN);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        Mockito.when(tokenService.generateToken(user)).thenReturn("token");
+
+        ResponseEntity<LoginResponseDTO> response = userService.login(authenticationDTO);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }

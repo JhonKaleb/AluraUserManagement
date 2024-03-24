@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @ControllerAdvice
@@ -17,7 +18,7 @@ public class ApiExceptionHandler {
                 ex.getMessage(),
                 ex,
                 badRequest,
-                ZonedDateTime.now()
+                ZonedDateTime.now(ZoneOffset.of("-03:00"))
         );
         return new ResponseEntity<>(apiException, badRequest);
     }
