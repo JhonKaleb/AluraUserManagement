@@ -1,6 +1,8 @@
 package com.alura.UserManagement.controller;
 
 
+import com.alura.UserManagement.domain.user.AuthenticationDTO;
+import com.alura.UserManagement.domain.user.LoginResponseDTO;
 import com.alura.UserManagement.domain.user.RegisterDTO;
 import com.alura.UserManagement.service.UserService;
 import jakarta.validation.Valid;
@@ -17,6 +19,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO payload) {
+        return userService.login(payload);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO payload) {
