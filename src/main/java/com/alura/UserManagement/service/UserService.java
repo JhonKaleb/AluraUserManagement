@@ -1,9 +1,10 @@
 package com.alura.UserManagement.service;
 
-import com.alura.UserManagement.domain.user.AuthenticationDTO;
-import com.alura.UserManagement.domain.user.LoginResponseDTO;
-import com.alura.UserManagement.domain.user.RegisterDTO;
+import com.alura.UserManagement.domain.user.dtos.AuthenticationDTO;
+import com.alura.UserManagement.domain.user.dtos.LoginResponseDTO;
+import com.alura.UserManagement.domain.user.dtos.RegisterDTO;
 import com.alura.UserManagement.domain.user.User;
+import com.alura.UserManagement.domain.user.dtos.UserDTO;
 import com.alura.UserManagement.exception.ApiRequestException;
 import com.alura.UserManagement.exception.ErrorMessages;
 import com.alura.UserManagement.repository.UserRepository;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,24 +30,24 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     public ResponseEntity<String> register(RegisterDTO payload) {
-        log.info("Registering user: {}", payload.getUsername());
+        log.info("Registering user: {}", payload.username());
 
-        if (userRepository.findByUsername(payload.getUsername()) != null) {
+        if (userRepository.findUserDetailsByUsername(payload.username()) != null) {
             log.error("Username already exists");
             throw new ApiRequestException(ErrorMessages.User.ALREADY_EXISTS);
         }
 
-        if (!isPasswordValid(payload.getPassword())) {
+        if (!isPasswordValid(payload.password())) {
             log.error("Password does not meet the requirements");
             throw new ApiRequestException(ErrorMessages.User.INVALID_PASSWORD);
         }
 
-        if (!isEmailValid(payload.getEmail())) {
+        if (!isEmailValid(payload.email())) {
             log.error("Email does not meet the requirements");
             throw new ApiRequestException(ErrorMessages.User.INVALID_EMAIL);
         }
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(payload.getPassword());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(payload.password());
         var user = payload.toUser();
         user.setPassword(encryptedPassword);
         userRepository.save(user);
@@ -75,8 +75,8 @@ public class UserService {
     }
 
     public ResponseEntity<LoginResponseDTO> login(AuthenticationDTO payload) {
-        log.info("Logging in user: {}", payload.getUsername());
-        var usernamePassword = new UsernamePasswordAuthenticationToken(payload.getUsername(), payload.getPassword());
+        log.info("Logging in user: {}", payload.username());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(payload.username(), payload.password());
         var auth = authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
         return ResponseEntity.ok(new LoginResponseDTO(token));
