@@ -1,17 +1,15 @@
 package com.alura.UserManagement.controller;
 
 
-import com.alura.UserManagement.domain.user.AuthenticationDTO;
-import com.alura.UserManagement.domain.user.LoginResponseDTO;
-import com.alura.UserManagement.domain.user.RegisterDTO;
+import com.alura.UserManagement.domain.user.dtos.AuthenticationDTO;
+import com.alura.UserManagement.domain.user.dtos.LoginResponseDTO;
+import com.alura.UserManagement.domain.user.dtos.RegisterDTO;
+import com.alura.UserManagement.domain.user.dtos.UserDTO;
 import com.alura.UserManagement.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user")
@@ -28,6 +26,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO payload) {
         return userService.register(payload);
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable String username) {
+        return userService.getUser(username);
     }
 
 }

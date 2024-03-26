@@ -32,7 +32,7 @@ public class UserService {
     public ResponseEntity<String> register(RegisterDTO payload) {
         log.info("Registering user: {}", payload.username());
 
-        if (userRepository.findUserDetailsByUsername(payload.username()) != null) {
+        if (userRepository.findByUsername(payload.username()) != null) {
             log.error("Username already exists");
             throw new ApiRequestException(ErrorMessages.User.ALREADY_EXISTS);
         }
@@ -80,5 +80,16 @@ public class UserService {
         var auth = authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
         return ResponseEntity.ok(new LoginResponseDTO(token));
+    }
+
+    public ResponseEntity<UserDTO> getUser(String username) {
+        log.info("Getting user: {}", username);
+        var user = userRepository.findByUsername(username);
+        if (user == null) {
+            log.error("User not found");
+            throw new ApiRequestException(ErrorMessages.User.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(UserDTO.fromUser(user));
     }
 }
