@@ -9,7 +9,7 @@ public class ErrorMessages {
                 "- At least one lowercase letter" +
                 "- At least one number";
         public static final String INVALID_EMAIL    = "Email does not meet the requirements";
-        public static final String INVALID_CREDENTIALS = "Invalid login credentials";
+        public static final String NOT_FOUND = "User not found";
     }
 
     public static class Token {
