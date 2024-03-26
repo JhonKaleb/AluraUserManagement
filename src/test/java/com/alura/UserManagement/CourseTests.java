@@ -1,6 +1,7 @@
 package com.alura.UserManagement;
 
 import com.alura.UserManagement.domain.course.Course;
+import com.alura.UserManagement.domain.course.CourseStatus;
 import com.alura.UserManagement.domain.course.CreateCourseDTO;
 import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.domain.user.UserRole;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +37,9 @@ public class CourseTests {
 
     @InjectMocks
     private CourseService courseService;
+
+
+    /** ENDPOINT : POST /course */
 
     // Creating a new course with valid details
     @Test
@@ -109,6 +114,42 @@ public class CourseTests {
             Assertions.fail("Expected ApiRequestException to be thrown due to non-existent instructor");
         } catch (ApiRequestException e) {
             assertEquals(ErrorMessages.User.INSTRUCTOR_NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /** ENDPOINT : PATCH /course/{courseCode}/deactivate */
+
+    // Successfully deactivating an active course
+    @Test
+    public void test_deactivate_active_course_successfully() {
+        String courseCode = "ActiveCourse";
+        Course activeCourse = new Course();
+        activeCourse.setCode(courseCode);
+        activeCourse.setStatus(CourseStatus.ACTIVE);
+
+        Mockito.when(courseRepository.findByCode(courseCode)).thenReturn(activeCourse);
+        Mockito.doAnswer(invocation -> {
+            Course course = invocation.getArgument(0);
+            assertEquals(CourseStatus.INACTIVE, course.getStatus());
+            return null;
+        }).when(courseRepository).save(any(Course.class));
+
+        ResponseEntity<String> response = courseService.deactivateCourse(courseCode);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    // Attempting to deactivate a course that does not exist
+    @Test
+    public void test_deactivate_nonexistent_course() {
+        String nonexistentCourseCode = "NonexistentCourse";
+
+        Mockito.when(courseRepository.findByCode(nonexistentCourseCode)).thenReturn(null);
+
+        try {
+            courseService.deactivateCourse(nonexistentCourseCode);
+            Assertions.fail("Expected ApiRequestException to be thrown due to course not found");
+        } catch (ApiRequestException e) {
+            assertEquals(ErrorMessages.Course.NOT_FOUND, e.getMessage());
         }
     }
 }

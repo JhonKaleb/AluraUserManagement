@@ -5,10 +5,7 @@ import com.alura.UserManagement.service.CourseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("course")
@@ -21,4 +18,10 @@ public class CourseController {
     public ResponseEntity<String> register(@RequestBody @Valid CreateCourseDTO payload) {
         return courseService.create(payload);
     }
+
+    @PatchMapping("/{courseCode}/deactivate")
+    public ResponseEntity<String> deactivate(@PathVariable String courseCode) {
+        return courseService.deactivateCourse(courseCode);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.alura.UserManagement.service;
 
+import com.alura.UserManagement.domain.course.CourseStatus;
 import com.alura.UserManagement.domain.course.CreateCourseDTO;
 import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.domain.user.UserRole;
@@ -57,5 +58,19 @@ public class CourseService {
             throw new ApiRequestException(ErrorMessages.User.INSTRUCTOR_NOT_FOUND);
         }
         return instructor;
+    }
+
+    public ResponseEntity<String> deactivateCourse(String courseCode) {
+        var course = courseRepository.findByCode(courseCode);
+        if (course == null) {
+            log.error("Course {} not found", courseCode);
+            throw new ApiRequestException(ErrorMessages.Course.NOT_FOUND);
+        }
+
+        course.setStatus(CourseStatus.INACTIVE);
+        courseRepository.save(course);
+
+        log.info("Course {} deactivated", courseCode);
+        return ResponseEntity.ok(String.format("Course '%s' deactivated successfully", courseCode));
     }
 }
