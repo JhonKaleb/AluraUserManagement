@@ -24,5 +24,6 @@ public class ErrorMessages {
                 "numbers or special characters, but can be separated by -. " +
                 "Example: spring-adv";
         public static final String ALREADY_EXISTS = "Course with code provided already exists";
+        public static final String NOT_FOUND = "Course not found";
     }
 }
