@@ -1,7 +1,9 @@
 package com.alura.UserManagement.service;
 
+import com.alura.UserManagement.domain.course.Course;
+import com.alura.UserManagement.domain.course.dtos.CourseDTO;
 import com.alura.UserManagement.domain.course.CourseStatus;
-import com.alura.UserManagement.domain.course.CreateCourseDTO;
+import com.alura.UserManagement.domain.course.dtos.CreateCourseDTO;
 import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.domain.user.UserRole;
 import com.alura.UserManagement.exception.ApiRequestException;
@@ -10,12 +12,11 @@ import com.alura.UserManagement.repository.CourseRepository;
 import com.alura.UserManagement.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -78,5 +79,20 @@ public class CourseService {
 
         log.info("Course {} deactivated", courseCode);
         return ResponseEntity.ok(String.format("Course '%s' deactivated successfully", courseCode));
+    }
+
+    public Page<CourseDTO> listCourses(String statusStr, Pageable pageable) {
+        if (statusStr == null) {
+            return courseRepository.findAll(pageable).map(CourseDTO::fromCourse);
+        }
+
+        var status = CourseStatus.getByCd(statusStr.toUpperCase());
+        if (status == null) {
+            log.error("Invalid course status {}", statusStr);
+            throw new ApiRequestException(ErrorMessages.Course.INVALID_STATUS);
+        }
+
+        Page<Course> courses = courseRepository.findByStatus(status, pageable);
+        return courses.map(CourseDTO::fromCourse);
     }
 }

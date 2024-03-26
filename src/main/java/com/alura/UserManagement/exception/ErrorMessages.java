@@ -1,5 +1,9 @@
 package com.alura.UserManagement.exception;
 
+import com.alura.UserManagement.domain.course.CourseStatus;
+
+import java.util.Arrays;
+
 public class ErrorMessages {
     public static class User {
         public static final String ALREADY_EXISTS = "User with username provided already exists";
@@ -25,5 +29,7 @@ public class ErrorMessages {
                 "Example: spring-adv";
         public static final String ALREADY_EXISTS = "Course with code provided already exists";
         public static final String NOT_FOUND = "Course not found";
+        public static final String INVALID_STATUS = "Invalid course status, valid values are: "
+                + Arrays.toString(Arrays.stream(CourseStatus.values()).map(CourseStatus::getCode).toArray());
     }
 }
