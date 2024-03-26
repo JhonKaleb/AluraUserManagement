@@ -1,5 +1,6 @@
-package com.alura.UserManagement.domain.course;
+package com.alura.UserManagement.domain.course.dtos;
 
+import com.alura.UserManagement.domain.course.Course;
 import com.alura.UserManagement.domain.user.User;
 
 import java.io.Serializable;

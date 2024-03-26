@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CourseRepository extends JpaRepository<Course, String> {
     Course findByCode(String code);
+    Page<Course> findByStatus(CourseStatus status, Pageable pageable);
 }

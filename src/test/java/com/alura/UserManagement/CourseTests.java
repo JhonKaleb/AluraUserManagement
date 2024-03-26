@@ -2,7 +2,8 @@ package com.alura.UserManagement;
 
 import com.alura.UserManagement.domain.course.Course;
 import com.alura.UserManagement.domain.course.CourseStatus;
-import com.alura.UserManagement.domain.course.CreateCourseDTO;
+import com.alura.UserManagement.domain.course.dtos.CourseDTO;
+import com.alura.UserManagement.domain.course.dtos.CreateCourseDTO;
 import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.domain.user.UserRole;
 import com.alura.UserManagement.exception.ApiRequestException;
@@ -18,11 +19,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
@@ -150,6 +156,69 @@ public class CourseTests {
             Assertions.fail("Expected ApiRequestException to be thrown due to course not found");
         } catch (ApiRequestException e) {
             assertEquals(ErrorMessages.Course.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /** ENDPOINT : GET /course/list */
+
+    private User createInstructor() {
+        User instructor = new User();
+        instructor.setName("Instructor Name");
+        return instructor;
+    }
+
+    // List all courses when status is null
+    @Test
+    public void test_list_all_courses() {
+        Pageable pageable = PageRequest.of(0, 10);
+        User instructor = createInstructor();
+
+        Course course1 = new Course();
+        course1.setInstructor(instructor);
+        Course course2 = new Course();
+        course2.setInstructor(instructor);
+
+        List<Course> courses = List.of(course1, course2);
+        Page<Course> coursePage = new PageImpl<>(courses, pageable, courses.size());
+
+        Mockito.when(courseRepository.findAll(pageable)).thenReturn(coursePage);
+
+        Page<CourseDTO> result = courseService.listCourses(null, pageable);
+        assertEquals(2, result.getContent().size());
+    }
+
+    // List courses by a specific, valid status
+    @Test
+    public void test_list_courses_by_valid_status() {
+        String status = "ATIVO";
+        Pageable pageable = PageRequest.of(0, 10);
+        User instructor = createInstructor();
+
+        Course course1 = new Course();
+        course1.setInstructor(instructor);
+        Course course2 = new Course();
+        course2.setInstructor(instructor);
+
+        List<Course> courses = List.of(course1, course2);
+        Page<Course> coursePage = new PageImpl<>(courses, pageable, courses.size());
+
+        Mockito.when(courseRepository.findByStatus(CourseStatus.ACTIVE, pageable)).thenReturn(coursePage);
+
+        Page<CourseDTO> result = courseService.listCourses(status, pageable);
+        assertEquals(2, result.getContent().size());
+    }
+
+    // Attempt to list courses with an invalid status
+    @Test
+    public void test_list_courses_with_invalid_status() {
+        String invalidStatus = "NOT_A_STATUS";
+        Pageable pageable = PageRequest.of(0, 10);
+
+        try {
+            courseService.listCourses(invalidStatus, pageable);
+            Assertions.fail("Expected ApiRequestException to be thrown due to invalid status");
+        } catch (ApiRequestException e) {
+            assertEquals(ErrorMessages.Course.INVALID_STATUS, e.getMessage());
         }
     }
 }
