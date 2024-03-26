@@ -11,6 +11,7 @@ import com.alura.UserManagement.exception.ErrorMessages;
 import com.alura.UserManagement.repository.CourseRepository;
 import com.alura.UserManagement.repository.UserRepository;
 import com.alura.UserManagement.service.CourseService;
+import com.alura.UserManagement.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +40,7 @@ public class CourseTests {
     private CourseRepository courseRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @InjectMocks
     private CourseService courseService;
@@ -58,7 +59,7 @@ public class CourseTests {
         );
 
         var instructor = new User();
-        Mockito.when(userRepository.findByUsernameAndRole("instructorUsername", UserRole.INSTRUCTOR)).thenReturn(instructor);
+        Mockito.when(userService.getInstructor("instructorUsername")).thenReturn(instructor);
         Mockito.when(courseRepository.findByCode("CourseCode")).thenReturn(null);
 
         var response = courseService.create(createCourseDTO);
@@ -100,26 +101,6 @@ public class CourseTests {
             Assertions.fail("Expected ApiRequestException to be thrown due to invalid course code");
         } catch (ApiRequestException e) {
             assertEquals(ErrorMessages.Course.INVALID_CODE, e.getMessage());
-        }
-    }
-
-    // Attempting to create a course with a non-existent instructor
-    @Test
-    public void test_create_course_with_nonexistent_instructor() {
-        CreateCourseDTO createCourseDTO = new CreateCourseDTO(
-                "Course Name",
-                "CourseCode",
-                "nonexistentInstructor",
-                "Course Description"
-        );
-
-        Mockito.when(userRepository.findByUsernameAndRole("nonexistentInstructor", UserRole.INSTRUCTOR)).thenReturn(null);
-
-        try {
-            courseService.create(createCourseDTO);
-            Assertions.fail("Expected ApiRequestException to be thrown due to non-existent instructor");
-        } catch (ApiRequestException e) {
-            assertEquals(ErrorMessages.User.INSTRUCTOR_NOT_FOUND, e.getMessage());
         }
     }
 

@@ -1,7 +1,8 @@
 package com.alura.UserManagement;
 
 
-import com.alura.UserManagement.domain.user.*;
+import com.alura.UserManagement.domain.user.User;
+import com.alura.UserManagement.domain.user.UserRole;
 import com.alura.UserManagement.domain.user.dtos.AuthenticationDTO;
 import com.alura.UserManagement.domain.user.dtos.LoginResponseDTO;
 import com.alura.UserManagement.domain.user.dtos.RegisterDTO;
@@ -26,7 +27,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
@@ -58,7 +58,7 @@ public class UserTests {
                 UserRole.ADMIN
         );
 
-        Mockito.when(userRepository.findUserDetailsByUsername(registerDTO.username())).thenReturn(null);
+        Mockito.when(userRepository.findByUsername(registerDTO.username())).thenReturn(null);
 
         ResponseEntity<String> response = userService.register(registerDTO);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -117,7 +117,7 @@ public class UserTests {
                 UserRole.ADMIN
         );
 
-        Mockito.when(userRepository.findUserDetailsByUsername(registerDTO.username())).thenReturn(null);
+        Mockito.when(userRepository.findByUsername(registerDTO.username())).thenReturn(null);
 
         try {
             userService.register(registerDTO);
@@ -138,7 +138,7 @@ public class UserTests {
                 UserRole.ADMIN
         );
 
-        Mockito.when(userRepository.findUserDetailsByUsername(registerDTO.username())).thenReturn(null);
+        Mockito.when(userRepository.findByUsername(registerDTO.username())).thenReturn(null);
 
         try {
             userService.register(registerDTO);

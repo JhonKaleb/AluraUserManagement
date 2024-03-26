@@ -29,12 +29,12 @@ public class CourseService {
     private CourseRepository courseRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     public ResponseEntity<String> create(CreateCourseDTO payload) {
         validateCourseCode(payload.code());
         checkCourseExistence(payload.code());
-        User instructor = getInstructor(payload.instructorUserName());
+        User instructor = userService.getInstructor(payload.instructorUserName());
 
         var course = payload.toCourse(instructor);
         courseRepository.save(course);
@@ -57,21 +57,8 @@ public class CourseService {
         }
     }
 
-    private User getInstructor(String username) {
-        var instructor = userRepository.findByUsernameAndRole(username, UserRole.INSTRUCTOR);
-        if (instructor == null) {
-            log.error("Instructor not found");
-            throw new ApiRequestException(ErrorMessages.User.INSTRUCTOR_NOT_FOUND);
-        }
-        return instructor;
-    }
-
     public ResponseEntity<String> deactivateCourse(String courseCode) {
-        var course = courseRepository.findByCode(courseCode);
-        if (course == null) {
-            log.error("Course {} not found", courseCode);
-            throw new ApiRequestException(ErrorMessages.Course.NOT_FOUND);
-        }
+        var course = getByCode(courseCode);
 
         course.setStatus(CourseStatus.INACTIVE);
         course.setDeactivationDate(new Date());
@@ -94,5 +81,15 @@ public class CourseService {
 
         Page<Course> courses = courseRepository.findByStatus(status, pageable);
         return courses.map(CourseDTO::fromCourse);
+    }
+
+    public Course getByCode(String courseCode) {
+        var course = courseRepository.findByCode(courseCode);
+        if (course == null) {
+            log.error("Course {} not found", courseCode);
+            throw new ApiRequestException(ErrorMessages.Course.NOT_FOUND);
+        }
+
+        return course;
     }
 }
