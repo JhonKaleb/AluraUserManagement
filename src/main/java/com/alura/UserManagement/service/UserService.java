@@ -1,5 +1,6 @@
 package com.alura.UserManagement.service;
 
+import com.alura.UserManagement.domain.user.UserRole;
 import com.alura.UserManagement.domain.user.dtos.AuthenticationDTO;
 import com.alura.UserManagement.domain.user.dtos.LoginResponseDTO;
 import com.alura.UserManagement.domain.user.dtos.RegisterDTO;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -83,13 +85,31 @@ public class UserService {
     }
 
     public ResponseEntity<UserDTO> getUser(String username) {
+        var user = getByUsername(username);
+        return ResponseEntity.ok(UserDTO.fromUser(user));
+    }
+
+    public User getByUsername(String username) {
         log.info("Getting user: {}", username);
         var user = userRepository.findByUsername(username);
         if (user == null) {
             log.error("User not found");
             throw new ApiRequestException(ErrorMessages.User.NOT_FOUND);
         }
-
-        return ResponseEntity.ok(UserDTO.fromUser(user));
+        return user;
     }
+
+    public User getInstructor(String username) {
+        var instructor = userRepository.findByUsernameAndRole(username, UserRole.INSTRUCTOR);
+        if (instructor == null) {
+            log.error("Instructor not found");
+            throw new ApiRequestException(ErrorMessages.User.INSTRUCTOR_NOT_FOUND);
+        }
+        return instructor;
+    }
+
+    public User getAuthenticated() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (User) authentication.getPrincipal();
+     }
 }

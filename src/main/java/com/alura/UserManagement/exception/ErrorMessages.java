@@ -32,4 +32,9 @@ public class ErrorMessages {
         public static final String INVALID_STATUS = "Invalid course status, valid values are: "
                 + Arrays.toString(Arrays.stream(CourseStatus.values()).map(CourseStatus::getCode).toArray());
     }
+
+    public static class Enrollment {
+        public static final String ALREADY_EXISTS = "User is already enrolled in the course";
+        public static final String COURSE_INACTIVE = "Course is inactive";
+    }
 }
