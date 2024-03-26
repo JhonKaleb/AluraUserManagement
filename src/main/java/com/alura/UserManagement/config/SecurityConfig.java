@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/course").hasRole(UserRole.ADMIN.getCode())
                         .requestMatchers(HttpMethod.PATCH, "/course/{courseCode}/deactivate").hasRole(UserRole.ADMIN.getCode())
                         .requestMatchers(HttpMethod.GET, "/course/list").hasRole(UserRole.ADMIN.getCode())
+                        .requestMatchers(HttpMethod.POST, "/enrollment").authenticated()
                         .anyRequest().authenticated()
                 )
                 .build();
