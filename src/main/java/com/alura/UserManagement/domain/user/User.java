@@ -41,7 +41,7 @@ public class User implements UserDetails {
 
     @Column(name = "creation_date", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
+    private Date creationDate = new Date();
 
     public User(String name, String username, String email, UserRole role) {
         this.name = name;
