@@ -34,7 +34,7 @@ public class Course {
 
     @Column(name = "creation_date", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
+    private Date creationDate = new Date();
 
     @Column(name = "deactivation_date", columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
