@@ -4,6 +4,7 @@ import com.alura.UserManagement.domain.course.Course;
 import com.alura.UserManagement.domain.course.CourseStatus;
 import com.alura.UserManagement.domain.enrollment.Enrollment;
 import com.alura.UserManagement.domain.enrollment.dtos.CreateEnrollmentDTO;
+import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.exception.ApiRequestException;
 import com.alura.UserManagement.exception.ErrorMessages;
 import com.alura.UserManagement.repository.EnrollmentRepository;
@@ -56,5 +57,9 @@ public class EnrollmentService {
             log.error("Course {} is inactive", course.getCode());
             throw new ApiRequestException(ErrorMessages.Enrollment.COURSE_INACTIVE);
         }
+    }
+
+    public Enrollment getEnrollment(User user, Course course) {
+        return enrollmentRepository.findByUserAndCourse(user, course);
     }
 }

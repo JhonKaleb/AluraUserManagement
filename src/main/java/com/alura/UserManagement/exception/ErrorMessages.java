@@ -37,4 +37,10 @@ public class ErrorMessages {
         public static final String ALREADY_EXISTS = "User is already enrolled in the course";
         public static final String COURSE_INACTIVE = "Course is inactive";
     }
+
+    public static class Rating {
+        public static final String USER_NOT_ENROLLED = "User is not enrolled in the course";
+        public static final String INVALID_RATING = "Invalid rating, valid values are between 1 and 10";
+        public static final String ALREADY_RATED = "User already rated the course";
+    }
 }
