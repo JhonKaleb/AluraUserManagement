@@ -63,7 +63,7 @@ public class RatingService {
     }
 
     private static boolean isDetractorRate(Rating rating) {
-        return rating.getRating() < DETRACTOR_RATE_FROM;
+        return rating.getRating() <= DETRACTOR_RATE_FROM;
     }
 
     private static void validateRatingValue(Integer rate) {
