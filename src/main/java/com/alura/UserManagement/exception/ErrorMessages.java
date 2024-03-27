@@ -5,6 +5,14 @@ import com.alura.UserManagement.domain.course.CourseStatus;
 import java.util.Arrays;
 
 public class ErrorMessages {
+
+    public static class General {
+        public static final String INTERNAL_SERVER_ERROR = "Internal server error";
+        public static final String INVALID_REQUEST = "Invalid request";
+        public static final String ACCESS_DENIED = "Unauthorized due role not allowed";
+        public static final String ENDPOINT_NOT_FOUND = "Endpoint not found";
+    }
+
     public static class User {
         public static final String ALREADY_EXISTS = "User with username provided already exists";
         public static final String INVALID_PASSWORD = "Password does not meet the requirements" +
