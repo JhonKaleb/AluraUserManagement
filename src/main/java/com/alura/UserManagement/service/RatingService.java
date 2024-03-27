@@ -1,6 +1,9 @@
 package com.alura.UserManagement.service;
 
+import com.alura.UserManagement.domain.course.Course;
+import com.alura.UserManagement.domain.rating.Rating;
 import com.alura.UserManagement.domain.rating.dtos.CreateRatingDTO;
+import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.exception.ApiRequestException;
 import com.alura.UserManagement.exception.ErrorMessages;
 import com.alura.UserManagement.repository.RatingRepository;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RatingService {
 
+    public static final int DETRACTOR_RATE_FROM = 6;
     @Autowired
     private CourseService courseService;
 
@@ -32,7 +36,6 @@ public class RatingService {
         var course = courseService.getByCode(payload.courseCode());
         var user = userService.getAuthenticated();
 
-        //verify if user alredy rated the course
         var rating = ratingRepository.findByUserAndCourse(user, course);
         if (rating != null) {
             log.error("User {} already rated course {}", user.getUsername(), course.getCode());
@@ -47,7 +50,20 @@ public class RatingService {
 
         rating = CreateRatingDTO.toRating(enrollment, payload);
         ratingRepository.save(rating);
+        
+        if (isDetractorRate(rating)) {
+            sendNegativeFeedBackMail(course, user, rating);
+        }
+
         return ResponseEntity.ok("Rating created successfully");
+    }
+
+    private static void sendNegativeFeedBackMail(Course course, User user, Rating rating) {
+        EmailService.send(user.getEmail(), course.getName(), rating.getComment());
+    }
+
+    private static boolean isDetractorRate(Rating rating) {
+        return rating.getRating() < DETRACTOR_RATE_FROM;
     }
 
     private static void validateRatingValue(Integer rate) {
