@@ -26,6 +26,9 @@ You have basic knowledge of Docker, Spring Boot, and MySQL.
 
 - docker-compose.yml - Docker Compose file to orchestrate the application and its MySQL database.
 
+### Database schema ERD
+[![ERD]()
+
 ## Setup
 
 To set up the project for development or testing purposes, follow these steps:
