@@ -2,6 +2,7 @@ package com.alura.UserManagement.service;
 
 import com.alura.UserManagement.domain.user.User;
 import com.alura.UserManagement.exception.ApiRequestException;
+import com.alura.UserManagement.exception.CustomAuthenticationException;
 import com.alura.UserManagement.exception.ErrorMessages;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -56,7 +57,7 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            throw new ApiRequestException(ErrorMessages.Token.VALIDATION_ERROR, exception);
+            throw new CustomAuthenticationException(ErrorMessages.Token.VALIDATION_ERROR, exception);
         }
     }
 }

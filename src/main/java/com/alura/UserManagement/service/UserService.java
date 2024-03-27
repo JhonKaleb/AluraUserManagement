@@ -39,6 +39,11 @@ public class UserService {
             throw new ApiRequestException(ErrorMessages.User.ALREADY_EXISTS);
         }
 
+        if (userRepository.findByEmail(payload.email()) != null) {
+            log.error("Email already exists");
+            throw new ApiRequestException(ErrorMessages.User.EMAIL_ALREADY_EXISTS);
+        }
+
         if (!isPasswordValid(payload.password())) {
             log.error("Password does not meet the requirements");
             throw new ApiRequestException(ErrorMessages.User.INVALID_PASSWORD);
