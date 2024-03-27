@@ -27,7 +27,7 @@ You have basic knowledge of Docker, Spring Boot, and MySQL.
 - docker-compose.yml - Docker Compose file to orchestrate the application and its MySQL database.
 
 ### Database schema ERD
-[![ERD]()
+![ERD](https://github.com/JhonKaleb/AluraUserManagement/blob/main/ERD.jpg)
 
 ## Setup
 
