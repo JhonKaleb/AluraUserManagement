@@ -15,6 +15,7 @@ public class ErrorMessages {
         public static final String INVALID_EMAIL = "Email does not meet the requirements";
         public static final String NOT_FOUND = "User not found";
         public static final String INSTRUCTOR_NOT_FOUND = "Instructor not found";
+        public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
     }
 
     public static class Token {
