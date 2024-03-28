@@ -1,9 +1,11 @@
 {
 	"info": {
-		"_postman_id": "549d34ce-207e-41b8-97e4-e67142950490",
+		"_postman_id": "ede12254-fe5b-4999-a6b9-ef57f1752b1a",
 		"name": "Alura User Management",
+		"description": "### Overview\n\nThe Educational Platform API provides a comprehensive suite of services for managing users, courses, enrollments, ratings, and generating reports on course performance. Designed to facilitate seamless interaction between students, instructors, and administrators, this API supports a wide range of functionalities from user authentication to detailed analytics on course satisfaction.\n\n### Security and Authorization\n\nAccess to the API is secured through the use of Bearer JWT tokens. These tokens are generated upon successful user login and must be included in the Authorization header of subsequent API requests. The JWT token ensures secure access to resources and endpoints based on the user's role and permissions.\n\n### Key Features\n\n#### User Management\n\n- **Endpoints:** `/user/login`, `/user/register`, `/user/{username}`\n    \n- **Description:** Supports user authentication, registration, and profile retrieval. Ensures users can securely access their information and manage account details.\n    \n\n#### Course Management\n\n- **Endpoints:** `/course`, `/course/{courseCode}/deactivate`, `/course/list`\n    \n- **Description:** Allows administrators to create, deactivate, and list courses. Provides instructors with tools to manage course offerings and content.\n    \n\n#### Enrollment Management\n\n- **Endpoints:** `/enrollment`\n    \n- **Description:** Facilitates the enrollment of students into courses. Supports dynamic course registration, enabling students to engage with available educational content.\n    \n\n#### Ratings Management\n\n- **Endpoints:** `/rating`\n    \n- **Description:** Enables students to provide feedback on courses through ratings and comments. Essential for maintaining high-quality course content and instruction.\n    \n\n#### Reports Generation\n\n- **Endpoints:** `/reports/nps`\n    \n- **Description:** Generates Net Promoter Score (NPS) reports for courses, available exclusively to administrators. Provides insights into course satisfaction, focusing on courses with 4 or more enrollments to ensure meaningful feedback.\n    \n\n### Usage Guidelines\n\n- **Authorization Header:** All requests to secured endpoints must include the Authorization header with the Bearer token obtained during login: `Authorization: Bearer` .\n    \n- **Role-Based Access Control:** Access to certain endpoints and functionalities is restricted based on the user's role (e.g., Student, Instructor, Administrator). Ensure appropriate role assignment during the user registration process.\n    \n- **Data Validation:** Requests to the API should adhere to the specified request schemas for each endpoint.\n    \n- **Error Handling:** The API provides detailed error responses for troubleshooting purposes. Users are encouraged to review error messages and status codes to resolve issues",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28553012"
+		"_exporter_id": "33903734",
+		"_collection_link": "https://jhon-kaleb-team.postman.co/workspace/Team-Workspace~cf7f7e95-7142-47d0-8fef-93182e55ca6c/collection/33903734-ede12254-fe5b-4999-a6b9-ef57f1752b1a?action=share&source=collection_link&creator=33903734"
 	},
 	"item": [
 		{
@@ -16,7 +18,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Jhon Kaleb\",\r\n    \"username\": \"jhon_kaleb_aluno\",\r\n    \"email\": \"jhon.kalebestudante@hotmail.com\",\r\n    \"password\": \"123abcABC\",\r\n    \"role\": \"ESTUDANTE\"\r\n}\r\n",
+							"raw": "{\r\n    \"name\": \"Paulo Silveira\",\r\n    \"username\": \"paulo_silveira\",\r\n    \"email\": \"paulo_silveira@alura.com\",\r\n    \"password\": \"123abcABC\",\r\n    \"role\": \"INSTRUTOR\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,17 +26,16 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/user/register",
-							"protocol": "http",
+							"raw": "{{API_URL}}/user/register",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"user",
 								"register"
 							]
-						}
+						},
+						"description": "Registers a new user with the system, requiring a username, password, and other necessary information.\n\n**Request Schema:**\n\n``` json\n{\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"email\": \"string\",\n  \"name\": \"string\",\n  \"role\": \"string(enum)['ESTUDANTE', 'INSTRUTOR', 'ADMIN']\"\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -45,7 +46,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"jhon_kaleb_aluno\",\r\n    \"password\": \"123abcABC\"\r\n}",
+							"raw": "{\r\n    \"username\": \"paulo_silveira\",\r\n    \"password\": \"123abcABC\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,17 +54,16 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/user/login",
-							"protocol": "http",
+							"raw": "{{API_URL}}/user/login",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"user",
 								"login"
 							]
-						}
+						},
+						"description": "Authenticates a user by their username and password, returning a token for accessing protected routes.\n\n**Request Schema:**\n\n``` json\n{\n  \"username\": \"string\",\n  \"password\": \"string\"\n}\n\n ```\n\n  \n**Response Schema**\n\n``` json\n{\n  \"token\": \"string\"\n}\n\n\n ```"
 					},
 					"response": []
 				},
@@ -75,7 +75,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBbHVyYSIsImV4cCI6MTcxMTQ0Mjk3NSwic3ViIjoiamhvbl9rYWxlYl9hZG1pbiJ9.khuW6PzAVtlrhTj1JYChlLKMA-8zXN-_mG1hT357ihY",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -83,21 +83,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/user/jhon_kaleb_aluno",
-							"protocol": "http",
+							"raw": "{{API_URL}}/user/<user_name>",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"user",
-								"jhon_kaleb_aluno"
+								"<user_name>"
 							]
-						}
+						},
+						"description": "Retrieves the details of a user by their username, such as name, email, and role.\n\nURL Parameter: user_name (String)\n\n**Response Schema:**\n\n``` json\n{\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"role\": \"string\"\n}\n\n ```\n\n**Require role: ADMIN**"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "### Overview\n\nThe User API provides a comprehensive set of endpoints for managing user accounts within our system. It allows for user authentication, registration, and retrieval of user details. This API is designed to facilitate seamless user management for applications requiring user authentication and role-based access control.\n\n### Roles\n\nThe system defines three roles for users: `ESTUDANTE` (Student), `INSTRUTOR` (Instructor), and `ADMIN` (Administrator). Each role has specific access rights and functionalities within the system.\n\n### Security\n\n\\`Get user\\` endpoint require appropriate ADMIN role authentication token, obtained through the login process, to access."
 		},
 		{
 			"name": "Course",
@@ -110,7 +110,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBbHVyYSIsImV4cCI6MTcxMTQ2Mjc5MSwic3ViIjoiamhvbl9rYWxlYl9hZG1pbiJ9.lZLXBgmQ2YpAkm6DZ-VN7xVSfBoknhIalcxtax1rUwg",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -127,16 +127,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/course",
-							"protocol": "http",
+							"raw": "{{API_URL}}/course",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"course"
 							]
-						}
+						},
+						"description": "Registers a new course with the given details.\n\n**Request Schema:**\n\n``` json\n{\n  \"name\": \"string\",\n  \"code\": \"string\",\n  \"instructorUserName\": \"string\",\n  \"description\": \"string\"\n}\n\n ```\n\n**Require role: ADMIN**"
 					},
 					"response": []
 				},
@@ -148,7 +147,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBbHVyYSIsImV4cCI6MTcxMTQ2Mjc5MSwic3ViIjoiamhvbl9rYWxlYl9hZG1pbiJ9.lZLXBgmQ2YpAkm6DZ-VN7xVSfBoknhIalcxtax1rUwg",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -156,18 +155,17 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course/spring-adv/deactivate",
-							"protocol": "http",
+							"raw": "{{API_URL}}/course/<course_code>/deactivate",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"course",
-								"spring-adv",
+								"<course_code>",
 								"deactivate"
 							]
-						}
+						},
+						"description": "Deactivates an existing course identified by its course code.\n\nURL Parameter: course_code (String)\n\n**Require role: ADMIN**"
 					},
 					"response": []
 				},
@@ -179,7 +177,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBbHVyYSIsImV4cCI6MTcxMTUwNzg5NSwic3ViIjoiamhvbl9rYWxlYl9hZG1pbiJ9.J2SG-57fcS-JMcvjRKr5g5I5LknaEvSBNY6NlcXqzNc",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -187,12 +185,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/course/list?status=INATIVO",
-							"protocol": "http",
+							"raw": "{{API_URL}}/course/list?status=<status>&page=<page>&size=<size>",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"course",
 								"list"
@@ -200,14 +196,24 @@
 							"query": [
 								{
 									"key": "status",
-									"value": "INATIVO"
+									"value": "<status>"
+								},
+								{
+									"key": "page",
+									"value": "<page>"
+								},
+								{
+									"key": "size",
+									"value": "<size>"
 								}
 							]
-						}
+						},
+						"description": "Retrieves a paginated list of courses, optionally filtered by course status.\n\n**Query Parameters:**\n\n- **status** (optional): Filter courses by status (ATIVO, INATIVO).\n- **page** (optional): Page number of the course listing.\n- **size** (optional): Number of courses per page. Default is 5.\n    \n\n**Require role: any authenticated role**"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "### Overview\n\nThe Course Management API facilitates the creation, deactivation, and listing of courses within our educational platform. It provides endpoints for administrators and instructors to manage course offerings effectively, including course registration, status updates, and detailed course listings with pagination support.\n\n### Security and Access Control\n\nAccess to this API is strictly controlled and limited to users with an `ADMIN` role. All endpoints require authentication and appropriate role verification to ensure that only authorized administrative users can create, deactivate, or list courses.\n\n### Additional Information\n\n- To ensure the security of our platform, all API requests must be accompanied by a valid authentication token, which is checked for the required `ADMIN` role.\n    \n- Detailed error messages and HTTP status codes are provided to aid in troubleshooting failed requests or unauthorized access attempts.\n    \n- This documentation is intended for developers and platform administrators responsible for managing courses within the platform."
 		},
 		{
 			"name": "Enrollment",
@@ -220,7 +226,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBbHVyYSIsImV4cCI6MTcxMTU0NDY2Mywic3ViIjoiamhvbl9rYWxlYl9hbHVubyJ9.5q4VTUl78L6-D_CNnHhO866oPi2etLo-y09V2GsLziE",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -237,20 +243,20 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/enrollment",
-							"protocol": "http",
+							"raw": "{{API_URL}}/enrollment",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"enrollment"
 							]
-						}
+						},
+						"description": "Registers the authenticated user to a specified course using the course code. This endpoint is designed to create a new enrollment record associating a user with a course.\n\n**Request Schema:**\n\n``` json\n{\n  \"courseCode\": \"string\"\n}\n\n ```\n\n**Require role: ADMIN**"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "### Overview\n\nThe Enrollment Management API facilitates the enrollment of users into courses. It provides a streamlined process for users to register for courses, enhancing the learning experience by simplifying access to educational content.\n\n### Security and Access Control\n\nAccess to the Create Enrollment endpoint requires authentication to ensure that the user only enroll their self in courses.\n\n### Additional Information\n\n- **Validation:** The system performs validation on the request payload to ensure that the course code is provided and corresponds to an existing course. Errors in validation will result in an appropriate error message.\n- **Idempotency:** To prevent duplicate enrollments, the system checks if the user is already enrolled in the specified course before creating a new enrollment record.\n- **Error Handling:** Detailed error messages are provided to facilitate troubleshooting in cases of failed enrollment attempts. This includes scenarios such as non-existent courses, database errors, or already existing enrollments."
 		},
 		{
 			"name": "Rating",
@@ -258,12 +264,42 @@
 				{
 					"name": "Create Rating",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseCode\": \"\",\r\n    \"comment\": \"\",\r\n    \"rating\":\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/rating",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"rating"
+							]
+						},
+						"description": "Allows a user to submit a rating and comment for a course they are enrolled in. This endpoint is aimed at capturing user feedback on course content and instruction quality.\n\n**Request Schema:**\n\n``` json\n{\n  \"courseCode\": \"string\",\n  \"comment\": \"string\",\n  \"rating\": \"integer\"\n}\n\n ```\n\n**Details:**\n\n- **courseCode**: The unique identifier of the course being rated.\n- **comment**: A textual comment about the course.\n- **rating**: A numerical rating for the course (1 to 10).\n    \n\n**Require role: any authenticated role**"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "### Overview\n\nThe Ratings Management API provides functionality for users to rate and comment on courses they are enrolled in. This feedback mechanism is crucial for maintaining high-quality course content and for guiding prospective students in their course selection.\n\n### Security and Access Control\n\nAccess to the Create Rating endpoint is secured to ensure that only authenticated users can submit ratings. Furthermore, validation logic checks that the user is enrolled in the course they attempt to rate, preserving the integrity of the feedback mechanism.\n\n### Additional Information\n\n- **Validation:** The API validates the incoming data to ensure that the course code exists, the user is enrolled in the course, and the rating is within the accepted range.\n    \n- **Idempotency and Duplication:** Implementations restrict users to one rating per course.\n    \n- **Error Handling:** The system provides detailed error messages to help users understand why their rating submission failed, aiding in troubleshooting and ensuring a user-friendly experience."
 		},
 		{
 			"name": "Reports",
@@ -276,7 +312,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBbHVyYSIsImV4cCI6MTcxMTU4MTE5Mywic3ViIjoiamhvbl9rYWxlYl9hZG1pbiJ9.eo2UPtArSWJZVaOGX7DLFbo_I74QRKaaRVZc4zridZs",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -284,21 +320,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/reports/nps",
-							"protocol": "http",
+							"raw": "{{API_URL}}/reports/nps",
 							"host": [
-								"localhost"
+								"{{API_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"reports",
 								"nps"
 							]
-						}
+						},
+						"description": "Retrieves the Net Promoter Score (NPS) for each course, offering a comprehensive overview of user satisfaction. The NPS is a key performance indicator that ranges from -100 to 100, indicating overall customer satisfaction and loyalty.\n\n**Response Schema:**\n\n``` json\n[\n  {\n    \"courseCode\": \"string\",\n    \"courseName\": \"string\",\n    \"nps\": \"number\"\n  }\n]\n\n ```\n\n**Details:**\n\n- **courseCode**: The unique identifier for the course.\n- **courseName**: The name of the course.\n- **nps**: The calculated Net Promoter Score for the course, indicating the level of user satisfaction.\n    \n\n**Require role: ADMIN**"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "### Overview\n\nThe NPS (Net Promoter Score) Report API is designed for administrators to gather insights into the satisfaction levels of users across different courses. It provides a crucial metric for understanding the likelihood of users to recommend courses to others, which is instrumental in evaluating and enhancing course quality.\n\n### Security and Access Control\n\n**Important:** Access to the Get NPS Report endpoint is strictly restricted to users with the `ADMIN` role. Authentication and role verification are required to ensure that only authorized administrative personnel can access sensitive report data.\n\n### Additional Information\n\n- **Course Selection Criteria:** Only courses with 4 or more enrollments are included in the NPS report. This threshold ensures that the NPS calculation is based on a sufficient volume of feedback, leading to more accurate and meaningful insights into course performance and user satisfaction."
 		}
 	]
 }

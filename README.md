@@ -67,7 +67,10 @@ This command starts the services defined in docker-compose.yml, setting up the d
 
 For endpoits, import into Postman the file `Alura User Management.postman_collection.json` in the root of the project.
 
-Or use the link: https://app.getpostman.com/join-team?invite_code=42140584ee1a52ed672f4267f7a19f35
+Or use the link to enter in team with the collection: https://app.getpostman.com/join-team?invite_code=42140584ee1a52ed672f4267f7a19f35
+
+And/or the link to collection:
+https://jhon-kaleb-team.postman.co/workspace/Team-Workspace~cf7f7e95-7142-47d0-8fef-93182e55ca6c/collection/33903734-ede12254-fe5b-4999-a6b9-ef57f1752b1a?action=share&creator=33903734
 
 ## Volumes
 The docker-compose.yml file specifies a volume for MySQL data persistence:
